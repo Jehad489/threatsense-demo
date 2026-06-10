@@ -21,6 +21,7 @@ export default function LoginPage() {
     setIsSubmitting(true);
 
     if (email === 'admin@email.com' && password === 'admin') {
+      document.cookie = "demo_auth=true; path=/; max-age=86400";
       window.location.href = '/';
       
     } else {
