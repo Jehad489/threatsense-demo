@@ -1,0 +1,24 @@
+{
+    "total_baseline_events": 3348,
+    "event_distribution": {
+        "http": 2580,
+        "logon": 516,
+        "email": 252
+    },
+    "after_hours_percentage": 31.660692951015534,
+    "top_http_domains": {
+        "thepiratebay.org": 296,
+        "noaa.gov": 125,
+        "buzzfeed.com": 122,
+        "optimum.net": 115,
+        "reference.com": 105
+    },
+    "top_email_contacts": {
+        "Jaquelyn.Angelica.Jimenez@dtaa.com": 21,
+        "Carter.Harrison.Maldonado@dtaa.com": 19,
+        "Isadora.Blaine.Shepherd@dtaa.com": 14,
+        "Chadwick.Armand.Nunez@dtaa.com": 14,
+        "William.Graham.Rowe@dtaa.com": 13
+    },
+    "top_file_types": {}
+}

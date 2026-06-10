@@ -31,6 +31,15 @@ export interface UserActivity {
   riskTrend: { time: string; score: number }[];
 }
 
+export type Department = 'IT' | 'Finance' | 'HR' | 'Executive' | 'Operations';
+export type OrgRole = 'Engineer' | 'Analyst' | 'Supervisor' | 'Manager' | 'Admin';
+
+export interface UserProfile {
+  userId: string;
+  department: Department;
+  role: OrgRole;
+}
+
 // Generate realistic timestamps
 const generateTimestamp = (minutesAgo: number): string => {
   const date = new Date();
@@ -64,17 +73,65 @@ export const mockEvents: ThreatEvent[] = [
 
 // Flagged users with high risk scores
 export const flaggedUsers: FlaggedUser[] = [
-  { userId: 'ACM2278', riskScore: 0.9412, scenario: 'S1', eventCount: 47, lastActivity: generateTimestamp(1), department: 'Engineering' },
+  { userId: 'ACM2278', riskScore: 0.9412, scenario: 'S1', eventCount: 47, lastActivity: generateTimestamp(1), department: 'IT' },
   { userId: 'MBG2190', riskScore: 0.9156, scenario: 'S2', eventCount: 23, lastActivity: generateTimestamp(4), department: 'Finance' },
-  { userId: 'CBT0091', riskScore: 0.8744, scenario: 'S3', eventCount: 18, lastActivity: generateTimestamp(11), department: 'HR' },
+  { userId: 'TSK9981', riskScore: 0.8744, scenario: 'S3', eventCount: 18, lastActivity: generateTimestamp(11), department: 'Operations' },
 ];
 
 // User behavior data for graph visualization
-export const users = [
-  'ACM2278', 'BTR1893', 'CWS0045', 'MBG2190', 'DKL3421', 
-  'PLR7821', 'JNS5590', 'RMT4421', 'HYL8834', 'CBT0091',
-  'WKR2234', 'MNP7723', 'TSK9981', 'BRT5543', 'LPK3321'
+export const userProfiles: UserProfile[] = [
+  // IT (4, including 1 flagged threat)
+  { userId: 'ACM2278', department: 'IT', role: 'Admin' },
+  { userId: 'BTR1893', department: 'IT', role: 'Engineer' },
+  { userId: 'CWS0045', department: 'IT', role: 'Analyst' },
+  { userId: 'DKL3421', department: 'IT', role: 'Engineer' },
+
+  // Finance (3, including 1 flagged threat)
+  { userId: 'MBG2190', department: 'Finance', role: 'Manager' },
+  { userId: 'RMT4421', department: 'Finance', role: 'Analyst' },
+  { userId: 'HYL8834', department: 'Finance', role: 'Engineer' },
+
+  // HR (3, no threats)
+  { userId: 'PLR7821', department: 'HR', role: 'Manager' },
+  { userId: 'CBT0091', department: 'HR', role: 'Analyst' },
+  { userId: 'WKR2234', department: 'HR', role: 'Admin' },
+
+  // Executive (2, both supervisors)
+  { userId: 'JNS5590', department: 'Executive', role: 'Supervisor' },
+  { userId: 'MNP7723', department: 'Executive', role: 'Supervisor' },
+
+  // Operations (3, including 1 flagged threat)
+  { userId: 'TSK9981', department: 'Operations', role: 'Engineer' },
+  { userId: 'BRT5543', department: 'Operations', role: 'Analyst' },
+  { userId: 'LPK3321', department: 'Operations', role: 'Manager' },
 ];
+
+export const users = userProfiles.map((user) => user.userId);
+
+export const userById = userProfiles.reduce<Record<string, UserProfile>>((acc, user) => {
+  acc[user.userId] = user;
+  return acc;
+}, {});
+
+export const departments: Department[] = ['IT', 'Finance', 'HR', 'Executive', 'Operations'];
+
+export const workstationsByUser: Record<string, string[]> = {
+  ACM2278: ['PC-0512', 'PC-4521'],
+  BTR1893: ['PC-1234', 'PC-3421'],
+  CWS0045: ['PC-0891'],
+  DKL3421: ['PC-0123'],
+  MBG2190: ['PC-2341'],
+  RMT4421: ['PC-3421'],
+  HYL8834: ['PC-9012'],
+  PLR7821: ['PC-4521'],
+  CBT0091: ['PC-5612'],
+  WKR2234: ['PC-1890'],
+  JNS5590: ['PC-7812'],
+  MNP7723: ['PC-4523'],
+  TSK9981: ['PC-2312'],
+  BRT5543: ['PC-8901'],
+  LPK3321: ['PC-3456'],
+};
 
 export const workstations = [
   'PC-0512', 'PC-1234', 'PC-0891', 'PC-2341', 'PC-0123',
@@ -84,20 +141,23 @@ export const workstations = [
 
 export const connections: { source: string; target: string; type: ThreatEvent['eventType']; isThreat: boolean }[] = [
   { source: 'ACM2278', target: 'PC-0512', type: 'HTTP', isThreat: true },
-  { source: 'BTR1893', target: 'PC-1234', type: 'LOGON', isThreat: false },
+  { source: 'BTR1893', target: 'PC-1234', type: 'EMAIL', isThreat: false },
   { source: 'CWS0045', target: 'PC-0891', type: 'EMAIL', isThreat: false },
   { source: 'MBG2190', target: 'PC-2341', type: 'USB', isThreat: true },
   { source: 'DKL3421', target: 'PC-0123', type: 'FILE', isThreat: false },
   { source: 'PLR7821', target: 'PC-4521', type: 'HTTP', isThreat: false },
   { source: 'ACM2278', target: 'PC-0512', type: 'FILE', isThreat: true },
-  { source: 'JNS5590', target: 'PC-7812', type: 'LOGOFF', isThreat: false },
+  { source: 'JNS5590', target: 'PC-7812', type: 'EMAIL', isThreat: false },
   { source: 'RMT4421', target: 'PC-3421', type: 'EMAIL', isThreat: false },
   { source: 'HYL8834', target: 'PC-9012', type: 'HTTP', isThreat: false },
-  { source: 'CBT0091', target: 'PC-5612', type: 'EMAIL', isThreat: true },
-  { source: 'WKR2234', target: 'PC-1890', type: 'LOGON', isThreat: false },
+  { source: 'CBT0091', target: 'PC-5612', type: 'EMAIL', isThreat: false },
+  { source: 'WKR2234', target: 'PC-1890', type: 'FILE', isThreat: false },
   { source: 'MNP7723', target: 'PC-4523', type: 'FILE', isThreat: false },
-  { source: 'TSK9981', target: 'PC-2312', type: 'USB', isThreat: false },
+  { source: 'TSK9981', target: 'PC-2312', type: 'USB', isThreat: true },
   { source: 'MBG2190', target: 'PC-2341', type: 'FILE', isThreat: true },
+  // Cross-department shared workstation interactions
+  { source: 'BTR1893', target: 'PC-3421', type: 'HTTP', isThreat: false }, // IT <-> Finance
+  { source: 'ACM2278', target: 'PC-4521', type: 'EMAIL', isThreat: true }, // IT <-> HR
 ];
 
 // User activity trajectory for selected user
@@ -121,34 +181,34 @@ export const getUserActivity = (userId: string): UserActivity => {
 
 // Model performance metrics
 export const modelMetrics = {
-  auprc: 0.9741,
-  f1Score: 0.9298,
-  precision: 0.9725,
-  recall: 0.8908,
+  auprc: 0.9910,
+  f1Score: 0.9742,
+  precision: 0.9956,
+  recall: 0.9538,
   accuracy: 0.9999,
 };
 
 // Confusion matrix
 export const confusionMatrix = {
-  tp: 53,
-  fp: 2,
-  fn: 7,
-  tn: 4251959,
+  tp: 227,
+  fp: 1,
+  fn: 11,
+  tn: 4295183,
 };
 
 // Precision-Recall curve data
 export const prCurveData = [
   { recall: 0.0, precision: 1.0 },
   { recall: 0.1, precision: 0.99 },
-  { recall: 0.2, precision: 0.98 },
-  { recall: 0.3, precision: 0.98 },
-  { recall: 0.4, precision: 0.97 },
-  { recall: 0.5, precision: 0.97 },
-  { recall: 0.6, precision: 0.96 },
-  { recall: 0.7, precision: 0.95 },
-  { recall: 0.8, precision: 0.93 },
-  { recall: 0.8908, precision: 0.9725 },
-  { recall: 0.9, precision: 0.90 },
+  { recall: 0.2, precision: 0.99 },
+  { recall: 0.3, precision: 0.99 },
+  { recall: 0.4, precision: 0.99 },
+  { recall: 0.5, precision: 0.99 },
+  { recall: 0.6, precision: 0.99 },
+  { recall: 0.7, precision: 0.99 },
+  { recall: 0.8, precision: 0.99 },
+  { recall: 0.9, precision: 0.99 },
+  { recall: 0.9538, precision: 0.9956 },
   { recall: 1.0, precision: 0.85 },
 ];
 

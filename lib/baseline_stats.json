@@ -1,0 +1,157 @@
+{
+  "KLH0596": {
+    "total_events": 3733,
+    "event_distribution": {
+      "HTTP": 2809,
+      "LOGON": 566,
+      "EMAIL": 269,
+      "FILE": 53,
+      "DEVICE": 36
+    },
+    "after_hours_pct": 26.9,
+    "top_domains": {
+      "thepiratebay.org": 291,
+      "fatwallet.com": 259,
+      "hp.com": 143,
+      "bluehost.com": 139,
+      "ca.gov": 139
+    },
+    "top_emails": {
+      "Mohammad.Vladimir.Farrell@dtaa.com": 16,
+      "Hanae.Gay.Hogan@dtaa.com": 15,
+      "Sylvia.Ariana.Head@dtaa.com": 15,
+      "Zane.Cadman.Fields@dtaa.com": 14,
+      "Whilemina.Pandora.England@dtaa.com": 13
+    },
+    "top_file_extensions": {
+      "doc": 35,
+      "pdf": 11,
+      "txt": 4,
+      "jpg": 3
+    },
+    "unique_devices": 1
+  },
+  "WDD0366": {
+    "total_events": 38285,
+    "event_distribution": {
+      "HTTP": 32748,
+      "EMAIL": 3020,
+      "LOGON": 2511,
+      "DEVICE": 4,
+      "FILE": 2
+    },
+    "after_hours_pct": 4.0,
+    "top_domains": {
+      "linkedin.com": 2201,
+      "eonline.com": 2201,
+      "gamestop.com": 1581,
+      "live.com": 1515,
+      "secureserver.net": 1506
+    },
+    "top_emails": {
+      "William.Price.Robles@dtaa.com": 147,
+      "Jackson.Rafael.Sutton@dtaa.com": 137,
+      "Ira.Brendan.Ball@dtaa.com": 136,
+      "Kennedy.Robert.Vega@dtaa.com": 136,
+      "Jacqueline.Latifah.Miles@dtaa.com": 135
+    },
+    "top_file_extensions": {
+      "doc": 2
+    },
+    "unique_devices": 554
+  },
+  "PPF0435": {
+    "total_events": 29673,
+    "event_distribution": {
+      "HTTP": 26408,
+      "EMAIL": 2650,
+      "LOGON": 562,
+      "DEVICE": 52,
+      "FILE": 1
+    },
+    "after_hours_pct": 3.6,
+    "top_domains": {
+      "gotomeeting.com": 2410,
+      "shareasale.com": 1333,
+      "zendesk.com": 1270,
+      "answers.com": 919,
+      "stackoverflow.com": 847
+    },
+    "top_emails": {
+      "Cathleen.Kelsey.Burke@dtaa.com": 119,
+      "Ian.Jonas.Morrow@dtaa.com": 119,
+      "Hayes.William.Wheeler@dtaa.com": 110,
+      "Elton.Tyler.Richard@dtaa.com": 106,
+      "ETR6@comcast.net": 105
+    },
+    "top_file_extensions": {
+      "pdf": 1
+    },
+    "unique_devices": 1
+  },
+  "JRG0207": {
+    "total_events": 41711,
+    "event_distribution": {
+      "HTTP": 37555,
+      "EMAIL": 3603,
+      "LOGON": 530,
+      "DEVICE": 14,
+      "FILE": 9
+    },
+    "after_hours_pct": 5.8,
+    "top_domains": {
+      "rr.com": 5105,
+      "kbb.com": 2619,
+      "vistaprint.com": 2611,
+      "superpages.com": 2536,
+      "blackboard.com": 2414
+    },
+    "top_emails": {
+      "Leslie.Briar.Fields@dtaa.com": 281,
+      "Hollee.Vanna.Becker@dtaa.com": 269,
+      "Aquila.Mark.Vega@dtaa.com": 264,
+      "Samson.Jeremy.Ortega@dtaa.com": 262,
+      "Noelani.Wynter.Kennedy@dtaa.com": 258
+    },
+    "top_file_extensions": {
+      "doc": 5,
+      "jpg": 2,
+      "pdf": 1,
+      "txt": 1
+    },
+    "unique_devices": 1
+  },
+  "DCH0843": {
+    "total_events": 3632,
+    "event_distribution": {
+      "HTTP": 2749,
+      "LOGON": 556,
+      "EMAIL": 268,
+      "DEVICE": 34,
+      "FILE": 25
+    },
+    "after_hours_pct": 33.0,
+    "top_domains": {
+      "thepiratebay.org": 315,
+      "buzzfeed.com": 131,
+      "noaa.gov": 130,
+      "optimum.net": 121,
+      "reference.com": 109
+    },
+    "top_emails": {
+      "Jaquelyn.Angelica.Jimenez@dtaa.com": 19,
+      "Emmanuel.Lawrence.Briggs@dtaa.com": 13,
+      "Carter.Harrison.Maldonado@dtaa.com": 13,
+      "Jessica.Rachel.Freeman@dtaa.com": 12,
+      "Isadora.Blaine.Shepherd@dtaa.com": 12
+    },
+    "top_file_extensions": {
+      "doc": 20,
+      "zip": 2,
+      "jpg": 1,
+      "txt": 1,
+      "pdf": 1
+    },
+    "unique_devices": 1
+  }
+}

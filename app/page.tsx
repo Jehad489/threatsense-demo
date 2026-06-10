@@ -10,6 +10,7 @@ import { AlertExplainability } from '@/components/dashboard/alert-explainability
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState('threat-feed');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const renderSection = () => {
     switch (activeSection) {
@@ -28,10 +29,10 @@ export default function Dashboard() {
 
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
-      <Header />
-      <div className="flex-1 flex overflow-hidden">
-        <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
-        <main className="flex-1 p-6 overflow-hidden">
+      <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+      <div className="flex-1 flex overflow-hidden relative">
+        <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <main className="flex-1 p-2 lg:p-6 overflow-hidden">
           {renderSection()}
         </main>
       </div>

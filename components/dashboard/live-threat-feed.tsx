@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AlertTriangle, User, Monitor, Clock, Shield } from 'lucide-react';
+import { AlertTriangle, User, Monitor, Clock, Shield, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { mockEvents, flaggedUsers, type ThreatEvent, type FlaggedUser } from '@/lib/mock-data';
 
@@ -95,13 +95,19 @@ function RiskGauge({ score, size = 'lg' }: { score: number; size?: 'sm' | 'lg' }
 }
 
 function EventRow({ event }: { event: ThreatEvent }) {
+  const [clientTimestamp, setClientTimestamp] = useState<string | null>(null);
+
+  useEffect(() => {
+    setClientTimestamp(event.timestamp);
+  }, [event.timestamp]);
+
   return (
     <div className={cn(
       'flex items-center gap-4 px-4 py-2.5 border-b border-border/50 hover:bg-secondary/50 transition-colors',
       event.isThreat && 'bg-[#DC2626]/5 threat-glow'
     )}>
       <span className="font-mono text-xs text-muted-foreground w-36 shrink-0">
-        {event.timestamp}
+        {clientTimestamp ?? '--:--:--'}
       </span>
       <div className="flex items-center gap-2 w-24 shrink-0">
         <User className="h-3.5 w-3.5 text-muted-foreground" />
@@ -132,6 +138,14 @@ function EventRow({ event }: { event: ThreatEvent }) {
 }
 
 function FlaggedUserCard({ user, isSelected, onClick }: { user: FlaggedUser; isSelected: boolean; onClick: () => void }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <button
       onClick={onClick}
@@ -173,121 +187,65 @@ function FlaggedUserCard({ user, isSelected, onClick }: { user: FlaggedUser; isS
   );
 }
 
-export function LiveThreatFeed() {
-  const [events, setEvents] = useState<ThreatEvent[]>(mockEvents);
-  const [selectedUser, setSelectedUser] = useState<FlaggedUser | null>(flaggedUsers[0]);
-  const [scenarioFilter, setScenarioFilter] = useState<ScenarioFilter>('ALL');
+function UserEventStreamBox({ userId, role }: { userId: string, role: string }) {
+  const [events, setEvents] = useState<{ time: string; type: string; pc: string }[]>([]);
 
-  // Simulate real-time events
   useEffect(() => {
+    const pc = `PC-${String(Math.floor(Math.random() * 9000) + 1000).padStart(4, '0')}`;
     const interval = setInterval(() => {
       setEvents(prev => {
-        const newEvent: ThreatEvent = {
-          id: `EVT${Date.now()}`,
-          timestamp: new Date().toISOString().replace('T', ' ').slice(0, 19),
-          userId: ['ACM2278', 'BTR1893', 'CWS0045', 'MBG2190', 'PLR7821'][Math.floor(Math.random() * 5)],
-          eventType: (['HTTP', 'USB', 'EMAIL', 'FILE', 'LOGON', 'LOGOFF'] as const)[Math.floor(Math.random() * 6)],
-          pc: `PC-${String(Math.floor(Math.random() * 9000) + 1000).padStart(4, '0')}`,
-          riskScore: Math.random() * 0.4,
-          isThreat: false,
+        const newEvent = {
+          time: new Date().toISOString().replace('T', ' ').slice(0, 19),
+          type: (['HTTP', 'USB', 'EMAIL', 'FILE', 'LOGON', 'LOGOFF'] as const)[Math.floor(Math.random() * 6)],
+          pc: pc
         };
-        return [newEvent, ...prev.slice(0, 19)];
+        return [newEvent, ...prev].slice(0, 50); // Keep last 50 events to prevent memory leak
       });
-    }, 3000);
+    }, 2000 + Math.random() * 3000); // Random interval per user
 
     return () => clearInterval(interval);
   }, []);
 
-  const filteredUsers = scenarioFilter === 'ALL'
-    ? flaggedUsers
-    : flaggedUsers.filter(u => u.scenario === scenarioFilter);
+  return (
+    <div className="flex flex-col bg-card rounded-lg border border-border overflow-hidden h-full shadow-lg">
+      <div className="flex justify-between items-center px-4 py-2 bg-secondary/30 border-b border-border">
+        <div className="flex flex-col">
+          <span className="font-mono text-sm font-bold text-foreground">{userId}</span>
+          <span className="text-xs text-muted-foreground font-medium">{role}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Live</span>
+        </div>
+      </div>
+      <div className="flex-1 overflow-y-auto p-4 bg-accent/30 font-mono text-[11px] leading-tight">
+        {events.length === 0 && <div className="text-muted-foreground animate-pulse text-xs">Waiting for activity intercept...</div>}
+        {events.map((evt, idx) => (
+          <div key={idx} className="mb-4">
+            <div className="text-muted-foreground">{evt.time}</div>
+            <div className="text-foreground font-bold">{userId}</div>
+            <div className="text-[#10B981] font-semibold">{evt.type}</div>
+            <div className="text-muted-foreground">{evt.pc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function LiveThreatFeed() {
+  const targetUsers = [
+    { id: 'KLH0596', role: 'ProductionLineWorker' },
+    { id: 'WDD0366', role: 'ITAdmin' },
+    { id: 'PPF0435', role: 'TestEngineer' },
+    { id: 'JRG0207', role: 'SecurityGuard' },
+  ];
 
   return (
-    <div className="flex h-full gap-6">
-      {/* Event Log */}
-      <div className="flex-1 flex flex-col bg-card rounded-lg border border-border overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-secondary/30">
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
-            <h2 className="text-sm font-semibold">Real-Time Event Stream</h2>
-          </div>
-          <span className="text-xs text-muted-foreground font-mono">
-            {events.length} events
-          </span>
-        </div>
-        <div className="flex-1 overflow-y-auto">
-          {events.map((event) => (
-            <EventRow key={event.id} event={event} />
-          ))}
-        </div>
-      </div>
-
-      {/* Flagged Users Panel */}
-      <div className="w-80 flex flex-col bg-card rounded-lg border border-border overflow-hidden">
-        <div className="px-4 py-3 border-b border-border bg-secondary/30">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Shield className="h-4 w-4 text-[#DC2626]" />
-              <h2 className="text-sm font-semibold">Flagged Users</h2>
-            </div>
-            <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-[#DC2626]/20 text-[#DC2626]">
-              {flaggedUsers.length} active
-            </span>
-          </div>
-          
-          {/* Scenario Tabs */}
-          <div className="flex gap-1">
-            {(['ALL', 'S1', 'S2', 'S3'] as const).map((scenario) => (
-              <button
-                key={scenario}
-                onClick={() => setScenarioFilter(scenario)}
-                className={cn(
-                  'px-3 py-1 text-xs font-mono rounded transition-colors',
-                  scenarioFilter === scenario
-                    ? 'bg-[#3B82F6] text-white'
-                    : 'bg-secondary text-muted-foreground hover:text-foreground'
-                )}
-              >
-                {scenario}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-3 space-y-2">
-          {filteredUsers.map((user) => (
-            <FlaggedUserCard
-              key={user.userId}
-              user={user}
-              isSelected={selectedUser?.userId === user.userId}
-              onClick={() => setSelectedUser(user)}
-            />
-          ))}
-        </div>
-
-        {/* Selected User Detail */}
-        {selectedUser && (
-          <div className="p-4 border-t border-border bg-secondary/30">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-xs text-muted-foreground">Selected User</p>
-                <p className="font-mono font-bold text-[#DC2626]">{selectedUser.userId}</p>
-              </div>
-              <RiskGauge score={selectedUser.riskScore} />
-            </div>
-            <div className="grid grid-cols-2 gap-3 text-xs">
-              <div className="bg-background rounded p-2">
-                <p className="text-muted-foreground">Scenario</p>
-                <p className="font-mono font-semibold text-[#DC2626]">{selectedUser.scenario}</p>
-              </div>
-              <div className="bg-background rounded p-2">
-                <p className="text-muted-foreground">Events</p>
-                <p className="font-mono font-semibold">{selectedUser.eventCount}</p>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+    <div className="h-full w-full grid grid-cols-1 md:grid-cols-2 grid-rows-none md:grid-rows-2 gap-4 pb-4">
+      {targetUsers.map(user => (
+        <UserEventStreamBox key={user.id} userId={user.id} role={user.role} />
+      ))}
     </div>
   );
 }

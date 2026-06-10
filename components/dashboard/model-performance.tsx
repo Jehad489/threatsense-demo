@@ -88,21 +88,7 @@ function ConfusionMatrixTile() {
         </div>
       </div>
 
-      {/* Imbalance Callout */}
-      <div className="bg-[#F59E0B]/10 border border-[#F59E0B]/30 rounded-lg p-3">
-        <div className="flex items-start gap-2">
-          <AlertTriangle className="h-4 w-4 text-[#F59E0B] mt-0.5 shrink-0" />
-          <div>
-            <p className="text-xs font-semibold text-[#F59E0B]">Extreme Class Imbalance</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              1 malicious : {ratio.toLocaleString()} normal events
-            </p>
-            <p className="text-[10px] text-muted-foreground mt-1 font-mono">
-              {`"Needle in a haystack" detection challenge`}
-            </p>
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 }
@@ -203,54 +189,7 @@ function PRCurveChart() {
   );
 }
 
-function ScenarioRecallGauge({ scenario, recall }: { scenario: string; recall: number }) {
-  const needsImprovement = recall === 0;
 
-  return (
-    <div className={cn(
-      'bg-card rounded-lg border p-4',
-      needsImprovement ? 'border-[#F59E0B]/30' : 'border-border'
-    )}>
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-secondary">
-            {scenario}
-          </span>
-          <span className="text-xs text-muted-foreground">
-            {scenario === 'S1' && 'WikiLeaks Exfil'}
-            {scenario === 'S2' && 'USB Theft'}
-            {scenario === 'S3' && 'Email Sabotage'}
-          </span>
-        </div>
-        {needsImprovement && (
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/30">
-            Needs Improvement
-          </span>
-        )}
-      </div>
-
-      {/* Progress bar */}
-      <div className="h-3 bg-secondary rounded-full overflow-hidden">
-        <div
-          className={cn(
-            'h-full rounded-full transition-all duration-500',
-            recall > 0.5 ? 'bg-[#10B981]' : recall > 0 ? 'bg-[#F59E0B]' : 'bg-[#DC2626]'
-          )}
-          style={{ width: `${recall * 100}%` }}
-        />
-      </div>
-
-      <div className="flex items-center justify-between mt-2">
-        <span className="font-mono text-lg font-bold" style={{
-          color: recall > 0.5 ? '#10B981' : recall > 0 ? '#F59E0B' : '#DC2626'
-        }}>
-          {(recall * 100).toFixed(2)}%
-        </span>
-        <span className="text-xs text-muted-foreground">Recall</span>
-      </div>
-    </div>
-  );
-}
 
 export function ModelPerformance() {
   return (
@@ -260,9 +199,9 @@ export function ModelPerformance() {
         <div className="flex items-center gap-2 mb-4">
           <Activity className="h-5 w-5 text-[#3B82F6]" />
           <h2 className="text-lg font-semibold">Model Performance Metrics</h2>
-          <span className="text-xs text-muted-foreground ml-2 font-mono">TGN + BiLSTM</span>
+          <span className="text-xs text-muted-foreground ml-2 font-mono">TGN + LSTM</span>
         </div>
-        <div className="grid grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           <MetricCard label="AUPRC" value={modelMetrics.auprc} icon={BarChart3} format="decimal" highlight />
           <MetricCard label="F1-Score" value={modelMetrics.f1Score} icon={Target} format="decimal" />
           <MetricCard label="Precision" value={modelMetrics.precision} icon={Percent} />
@@ -272,46 +211,14 @@ export function ModelPerformance() {
       </div>
 
       {/* PR Curve and Confusion Matrix */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <PRCurveChart />
         <ConfusionMatrixTile />
       </div>
 
-      {/* Per-Scenario Recall */}
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <Target className="h-5 w-5 text-[#F59E0B]" />
-          <h2 className="text-lg font-semibold">Per-Scenario Recall</h2>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          <ScenarioRecallGauge scenario="S1" recall={scenarioRecall.S1} />
-          <ScenarioRecallGauge scenario="S2" recall={scenarioRecall.S2} />
-          <ScenarioRecallGauge scenario="S3" recall={scenarioRecall.S3} />
-        </div>
-      </div>
 
-      {/* Model Info */}
-      <div className="bg-card rounded-lg border border-border p-4">
-        <h3 className="text-sm font-semibold mb-3">Model Architecture</h3>
-        <div className="grid grid-cols-4 gap-4 text-xs">
-          <div>
-            <p className="text-muted-foreground">Base Model</p>
-            <p className="font-mono font-semibold">Temporal Graph Network</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">Sequence Encoder</p>
-            <p className="font-mono font-semibold">BiLSTM (128 units)</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">Training Dataset</p>
-            <p className="font-mono font-semibold">CERT v4.2</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">Threshold</p>
-            <p className="font-mono font-semibold">0.8833</p>
-          </div>
-        </div>
-      </div>
+
+     
     </div>
   );
 }
