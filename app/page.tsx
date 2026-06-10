@@ -15,7 +15,7 @@ export default function Dashboard() {
   const renderSection = () => {
     switch (activeSection) {
       case 'threat-feed':
-        return <LiveThreatFeed />;
+        return <LiveThreatFeed onSectionChange={setActiveSection} />;
       case 'behavior-graph':
         return <UserBehaviorGraph />;
       case 'model-performance':
@@ -23,7 +23,7 @@ export default function Dashboard() {
       case 'explainability':
         return <AlertExplainability />;
       default:
-        return <LiveThreatFeed />;
+        return <LiveThreatFeed onSectionChange={setActiveSection} />;
     }
   };
 

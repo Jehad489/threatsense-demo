@@ -187,7 +187,7 @@ function FlaggedUserCard({ user, isSelected, onClick }: { user: FlaggedUser; isS
   );
 }
 
-function UserEventStreamBox({ userId, role }: { userId: string, role: string }) {
+function UserEventStreamBox({ userId, role, onSectionChange }: { userId: string, role: string, onSectionChange?: (s: string) => void }) {
   const [events, setEvents] = useState<{ time: string; type: string; pc: string }[]>([]);
 
   useEffect(() => {
@@ -218,22 +218,38 @@ function UserEventStreamBox({ userId, role }: { userId: string, role: string }) 
           <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Live</span>
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto p-4 bg-accent/30 font-mono text-[11px] leading-tight">
-        {events.length === 0 && <div className="text-muted-foreground animate-pulse text-xs">Waiting for activity intercept...</div>}
-        {events.map((evt, idx) => (
-          <div key={idx} className="mb-4">
-            <div className="text-muted-foreground">{evt.time}</div>
-            <div className="text-foreground font-bold">{userId}</div>
-            <div className="text-[#10B981] font-semibold">{evt.type}</div>
-            <div className="text-muted-foreground">{evt.pc}</div>
-          </div>
-        ))}
-      </div>
+        <div className="flex-1 overflow-y-auto p-4 bg-accent/30 font-mono text-[11px] leading-tight relative">
+          {userId === 'WDD0366' ? (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-destructive/10 backdrop-blur-[2px] p-4 text-center z-10">
+              <AlertTriangle className="h-8 w-8 text-destructive mb-3 animate-pulse" />
+              <div className="text-destructive font-bold text-sm uppercase tracking-widest mb-1">Access Revoked</div>
+              <div className="text-foreground font-semibold text-xs mb-4">Blocked user due to malicious activity.</div>
+              <button 
+                onClick={() => onSectionChange?.('explainability')}
+                className="bg-destructive hover:bg-destructive/90 text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-colors"
+              >
+                See More
+              </button>
+            </div>
+          ) : (
+            <>
+              {events.length === 0 && <div className="text-muted-foreground animate-pulse text-xs">Waiting for activity intercept...</div>}
+              {events.map((evt, idx) => (
+                <div key={idx} className="mb-4">
+                  <div className="text-muted-foreground">{evt.time}</div>
+                  <div className="text-foreground font-bold">{userId}</div>
+                  <div className="text-[#10B981] font-semibold">{evt.type}</div>
+                  <div className="text-muted-foreground">{evt.pc}</div>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
     </div>
   );
 }
 
-export function LiveThreatFeed() {
+export function LiveThreatFeed({ onSectionChange }: { onSectionChange?: (s: string) => void }) {
   const targetUsers = [
     { id: 'KLH0596', role: 'ProductionLineWorker' },
     { id: 'WDD0366', role: 'ITAdmin' },
@@ -244,7 +260,7 @@ export function LiveThreatFeed() {
   return (
     <div className="h-full w-full grid grid-cols-1 md:grid-cols-2 grid-rows-none md:grid-rows-2 gap-4 pb-4">
       {targetUsers.map(user => (
-        <UserEventStreamBox key={user.id} userId={user.id} role={user.role} />
+        <UserEventStreamBox key={user.id} userId={user.id} role={user.role} onSectionChange={onSectionChange} />
       ))}
     </div>
   );
