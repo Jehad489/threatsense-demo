@@ -247,7 +247,7 @@ function UserSidePanel({ user, onClose }: { user: LdapUser; onClose: () => void 
                     <div key={type}>
                       <div className="flex justify-between text-xs font-mono mb-1">
                         <span className="font-bold">{displayType}</span>
-                        <span className="text-muted-foreground">{count} ({pct}%)</span>
+                        <span className="text-muted-foreground">{String(count)} ({pct}%)</span>
                       </div>
                       <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
                         <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
