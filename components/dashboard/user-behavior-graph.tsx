@@ -384,7 +384,7 @@ function UserSidePanel({ user, onClose }: { user: LdapUser; onClose: () => void 
   );
 }
 
-export function UserBehaviorGraph() {
+export function UserBehaviorGraph({ initialUserId }: { initialUserId?: string | null }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
@@ -396,10 +396,17 @@ export function UserBehaviorGraph() {
   const [level, setLevel] = useState<Level>('overview');
   const [selectedDepartment, setSelectedDepartment] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<LdapUser | null>(null);
-  const [searchQuery, setSearchQuery] = useState('KLH0596');
+  const [searchQuery, setSearchQuery] = useState(initialUserId || 'KLH0596');
   const [highlightUserId, setHighlightUserId] = useState<string | null>(null);
   const [searchError, setSearchError] = useState<string | null>(null);
   const [hasInitialSearchRun, setHasInitialSearchRun] = useState(false);
+
+  useEffect(() => {
+    if (initialUserId && initialUserId !== searchQuery) {
+      setSearchQuery(initialUserId);
+      setHasInitialSearchRun(false);
+    }
+  }, [initialUserId]);
 
   useEffect(() => {
     Papa.parse<LdapRow>('/data/ldap.csv', {

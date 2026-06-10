@@ -187,7 +187,7 @@ function FlaggedUserCard({ user, isSelected, onClick }: { user: FlaggedUser; isS
   );
 }
 
-function UserEventStreamBox({ userId, role, onSectionChange }: { userId: string, role: string, onSectionChange?: (s: string) => void }) {
+function UserEventStreamBox({ userId, role, onSectionChange, onOpenProfile }: { userId: string, role: string, onSectionChange?: (s: string) => void, onOpenProfile?: (id: string) => void }) {
   const [events, setEvents] = useState<{ time: string; type: string; pc: string }[]>([]);
 
   useEffect(() => {
@@ -213,9 +213,17 @@ function UserEventStreamBox({ userId, role, onSectionChange }: { userId: string,
           <span className="font-mono text-sm font-bold text-foreground">{userId}</span>
           <span className="text-xs text-muted-foreground font-medium">{role}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
-          <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Live</span>
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => onOpenProfile?.(userId)}
+            className="text-[10px] bg-secondary hover:bg-secondary/80 text-foreground border border-border px-2 py-1 rounded transition-colors uppercase font-bold tracking-wider"
+          >
+            Open Profile
+          </button>
+          <div className="flex items-center gap-1.5">
+            <div className="h-2 w-2 rounded-full bg-[#10B981] animate-pulse" />
+            <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Live</span>
+          </div>
         </div>
       </div>
         <div className="flex-1 overflow-y-auto p-4 bg-accent/30 font-mono text-[11px] leading-tight relative">
@@ -249,7 +257,7 @@ function UserEventStreamBox({ userId, role, onSectionChange }: { userId: string,
   );
 }
 
-export function LiveThreatFeed({ onSectionChange }: { onSectionChange?: (s: string) => void }) {
+export function LiveThreatFeed({ onSectionChange, onOpenProfile }: { onSectionChange?: (s: string) => void, onOpenProfile?: (id: string) => void }) {
   const targetUsers = [
     { id: 'KLH0596', role: 'ProductionLineWorker' },
     { id: 'WDD0366', role: 'ITAdmin' },
@@ -260,7 +268,7 @@ export function LiveThreatFeed({ onSectionChange }: { onSectionChange?: (s: stri
   return (
     <div className="h-full w-full grid grid-cols-1 md:grid-cols-2 grid-rows-none md:grid-rows-2 gap-4 pb-4">
       {targetUsers.map(user => (
-        <UserEventStreamBox key={user.id} userId={user.id} role={user.role} onSectionChange={onSectionChange} />
+        <UserEventStreamBox key={user.id} userId={user.id} role={user.role} onSectionChange={onSectionChange} onOpenProfile={onOpenProfile} />
       ))}
     </div>
   );

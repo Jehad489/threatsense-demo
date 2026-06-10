@@ -11,19 +11,25 @@ import { AlertExplainability } from '@/components/dashboard/alert-explainability
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState('threat-feed');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [targetUser, setTargetUser] = useState<string | null>(null);
+
+  const handleOpenProfile = (userId: string) => {
+    setTargetUser(userId);
+    setActiveSection('behavior-graph');
+  };
 
   const renderSection = () => {
     switch (activeSection) {
       case 'threat-feed':
-        return <LiveThreatFeed onSectionChange={setActiveSection} />;
+        return <LiveThreatFeed onSectionChange={setActiveSection} onOpenProfile={handleOpenProfile} />;
       case 'behavior-graph':
-        return <UserBehaviorGraph />;
+        return <UserBehaviorGraph initialUserId={targetUser} />;
       case 'model-performance':
         return <ModelPerformance />;
       case 'explainability':
         return <AlertExplainability />;
       default:
-        return <LiveThreatFeed onSectionChange={setActiveSection} />;
+        return <LiveThreatFeed onSectionChange={setActiveSection} onOpenProfile={handleOpenProfile} />;
     }
   };
 
