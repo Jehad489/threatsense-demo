@@ -29,7 +29,7 @@ export default function Dashboard() {
 
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
-      <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} />
+      <Header onMenuClick={() => setSidebarOpen(!sidebarOpen)} onSectionChange={setActiveSection} />
       <div className="flex-1 flex overflow-hidden relative">
         <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <main className="flex-1 p-2 lg:p-6 overflow-hidden">

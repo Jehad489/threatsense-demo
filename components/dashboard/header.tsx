@@ -7,8 +7,16 @@ import { systemStats } from '@/lib/mock-data';
 import { Button } from '@/components/ui/button';
 import { createSupabaseBrowserClient } from '@/lib/supabase';
 import { ThemeToggle } from '@/components/theme-toggle';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
+export function Header({ onMenuClick, onSectionChange }: { onMenuClick?: () => void, onSectionChange?: (section: string) => void }) {
   const router = useRouter();
   const supabase = createSupabaseBrowserClient();
   const [eventCount, setEventCount] = useState(systemStats.totalEventsProcessed);
@@ -49,12 +57,30 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
 
         {/* Active Alerts */}
         <div className="flex items-center gap-2 mr-2 md:mr-0">
-          <div className="relative">
-            <Bell className="h-5 w-5 text-muted-foreground" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-destructive text-[10px] font-bold text-white flex items-center justify-center threat-pulse">
-              {systemStats.activeAlerts}
-            </span>
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="relative cursor-pointer hover:bg-secondary/50 p-2 rounded-full transition-colors">
+                <Bell className="h-5 w-5 text-muted-foreground" />
+                <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-destructive text-[10px] font-bold text-white flex items-center justify-center threat-pulse">
+                  1
+                </span>
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem 
+                className="cursor-pointer flex flex-col items-start gap-1 p-3"
+                onClick={() => onSectionChange && onSectionChange('explainability')}
+              >
+                <div className="flex items-center gap-2 w-full">
+                  <span className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
+                  <span className="font-semibold text-sm">Alert Detected</span>
+                </div>
+                <span className="text-xs text-muted-foreground">High-risk anomalous activity identified for user WDD0366. Click to view attack report.</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
       
