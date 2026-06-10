@@ -189,3 +189,18 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--muted-foreground);
 }
+
+@layer base {
+  button, [role="button"] {
+    cursor: pointer !important;
+    transition: transform 0.15s ease-in-out !important;
+  }
+  
+  button:hover, [role="button"]:hover {
+    transform: scale(0.95) !important;
+  }
+  
+  button:active, [role="button"]:active {
+    transform: scale(0.90) !important;
+  }
+}
